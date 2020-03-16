@@ -1,0 +1,23 @@
+version: 1
+update_configs:
+  - package_manager: "javascript"
+    directory: "/"
+    update_schedule: "live"
+    ignored_updates:
+      - match:
+          dependency_name: '@types/node'
+          version_requirement: '>= 12.7.5'
+      - match:
+          dependency_name: 'typescript'
+          version_requirement: '>= 3.6.3'
+    default_reviewers:
+      - "stefanfreitag"
+    allowed_updates:
+      - match:
+          update_type: "security"
+      - match:
+          dependency_name: "aws-cdk"
+      - match:
+          dependency_name: "@aws-cdk/*"
+  
+
