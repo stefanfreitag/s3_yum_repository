@@ -31,10 +31,6 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
       versioned: false
     });
 
-    const bucketPolicy = new BucketPolicy(this, "bucketPolicy", {
-      bucket: bucket
-    });
-
     const bucketContentStatement = new PolicyStatement({
       effect: Effect.ALLOW,
       actions: ["s3:GetObject"],
@@ -42,19 +38,23 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
       principals: [new AnyPrincipal()]
     });
     bucketContentStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "87.122.218.167/32"
+      "aws:SourceIp": "87.122.210.145/32"
     });
 
     const bucketStatement: PolicyStatement = new PolicyStatement({
       effect: Effect.ALLOW,
-      actions: ["s3:ListBucket"],
+      actions: ["s3:ListBucket" , "s3:GetBucketLocation" ],
       resources: [bucket.bucketArn],
       principals: [new AnyPrincipal()]
     });
     bucketStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "87.122.218.167/32"
+      "aws:SourceIp": "87.122.210.145/32"
     });
 
+    const bucketPolicy = new BucketPolicy(this, "bucketPolicy", {
+      bucket: bucket, 
+    });
+    
     bucketPolicy.document.addStatements(
       bucketContentStatement,
       bucketStatement
