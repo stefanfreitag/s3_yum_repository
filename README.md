@@ -3,7 +3,10 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/35fc9af4fb4a492f8f4686469999b527)](https://app.codacy.com/manual/stefan_20/s3_yum_repository?utm_source=github.com&utm_medium=referral&utm_content=stefanfreitag/s3_yum_repository&utm_campaign=Badge_Grade_Settings)
 
+[![Mergify Status][mergify-status]][mergify]
 
+[mergify]: https://mergify.io
+[mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/stefanfreitag/s3_yum_repository&style=for-the-badge
 
 ## Disclaimer
 
