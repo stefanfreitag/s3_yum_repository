@@ -4,10 +4,18 @@ import {
   Policy,
   PolicyStatement,
   ManagedPolicy,
-  ServicePrincipal
+  ServicePrincipal,
+  AnyPrincipal,
+  Effect,
+  ArnPrincipal
 } from "@aws-cdk/aws-iam";
-import { Bucket, BlockPublicAccess } from "@aws-cdk/aws-s3";
-import { CfnOutput } from "@aws-cdk/core";
+import {
+  Bucket,
+  BlockPublicAccess,
+  BucketEncryption,
+  BucketPolicy
+} from "@aws-cdk/aws-s3";
+import { CfnOutput, RemovalPolicy, CfnCondition } from "@aws-cdk/core";
 export class CorrettoYumRepositoryStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -16,34 +24,42 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
      * S3 bucket used to "host" the repository
      */
     const bucket: Bucket = new Bucket(this, "CorrettoS3Bucket", {
-    //  blockPublicAccess: BlockPublicAccess.BLOCK_ALL
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+      encryption: BucketEncryption.UNENCRYPTED,
+      publicReadAccess: false,
+      removalPolicy: RemovalPolicy.DESTROY,
+      versioned: false
     });
 
-    bucket.grantPublicAccess();
-   
-    /**
-     * Define policy for resource access
-     */
-    const statement_1: PolicyStatement = new PolicyStatement({
-      actions: ["s3:GetObject", "s3:ListBucket", "s3:GetBucketLocation"],
-      resources: [bucket.bucketArn]
-    });
-
-    const statement_2: PolicyStatement = new PolicyStatement({
+    const bucketContentStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
       actions: ["s3:GetObject"],
-      resources: [bucket.bucketArn + "/*"]
+      resources: [bucket.bucketArn + "/*"],
+      principals: [new AnyPrincipal()]
+    });
+    bucketContentStatement.addCondition("IpAddress", {
+      "aws:SourceIp": "87.122.210.145/32"
     });
 
-    const policy: Policy = new Policy(this, "CorrettoS3BucketPolicy", {});
-    policy.addStatements(statement_1, statement_2);
-
-    const role: Role = new Role(this, "s3_repository_role", {
-      assumedBy: new ServicePrincipal("s3.amazonaws.com"),
-      roleName: "yum-repository-role"
+    const bucketStatement: PolicyStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:ListBucket" , "s3:GetBucketLocation" ],
+      resources: [bucket.bucketArn],
+      principals: [new AnyPrincipal()]
     });
-    policy.attachToRole(role);
+    bucketStatement.addCondition("IpAddress", {
+      "aws:SourceIp": "87.122.210.145/32"
+    });
+
+    const bucketPolicy = new BucketPolicy(this, "bucketPolicy", {
+      bucket: bucket, 
+    });
     
-    new cdk.CfnOutput(this, "Bucket name", { value: bucket.bucketName });
+    bucketPolicy.document.addStatements(
+      bucketContentStatement,
+      bucketStatement
+    );
 
+    new cdk.CfnOutput(this, "Bucket name", { value: bucket.bucketName });
   }
 }
