@@ -104,18 +104,18 @@ Sqlite DBs complete
 
 
 
-## The S3 Bucket
+## Setup the S3 Bucket using AWS CDK
 
 ### Create the bucket
   
 ```javascript
 const bucket: Bucket = new Bucket(this, "CorrettoS3Bucket", {
-      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      encryption: BucketEncryption.UNENCRYPTED,
-      publicReadAccess: false,
-      removalPolicy: RemovalPolicy.DESTROY,
-      versioned: false,
-    });
+  blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
+  encryption: BucketEncryption.UNENCRYPTED,
+  publicReadAccess: false,
+  removalPolicy: RemovalPolicy.DESTROY,
+  versioned: false,
+});
 ```
 
 
@@ -126,31 +126,31 @@ const bucket: Bucket = new Bucket(this, "CorrettoS3Bucket", {
 
 ```javascript
 const bucketContentStatement = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["s3:GetObject"],
-      resources: [bucket.bucketArn + "/*"],
-      principals: [new AnyPrincipal()]
-    });
+  effect: Effect.ALLOW,
+  actions: ["s3:GetObject"],
+  resources: [bucket.bucketArn + "/*"],
+  principals: [new AnyPrincipal()]
+});
 
-    bucketContentStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "123.456.789.012/32"
-    });
+bucketContentStatement.addCondition("IpAddress", {
+  "aws:SourceIp": "123.456.789.012/32"
+});
 ```
 
 
-Allow the list operation on the bucket itself
+Allow the `list` operation on the bucket itself
 
 ```javascript
-    const bucketStatement: PolicyStatement = new PolicyStatement({
-      effect: Effect.ALLOW,
-      actions: ["s3:ListBucket"],
-      resources: [bucket.bucketArn],
-      principals: [new AnyPrincipal()]
-    });
+const bucketStatement: PolicyStatement = new PolicyStatement({
+  effect: Effect.ALLOW,
+  actions: ["s3:ListBucket"],
+  resources: [bucket.bucketArn],
+  principals: [new AnyPrincipal()]
+});
 
-    bucketStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "123.456.789.012/32"
-    });
+bucketStatement.addCondition("IpAddress", {
+  "aws:SourceIp": "123.456.789.012/32"
+});
 ```
 
 
@@ -158,16 +158,12 @@ Allow the list operation on the bucket itself
 
 ```javascript
 const bucketPolicy = new BucketPolicy(this, "bucketPolicy", {
-      bucket: bucket,
-    });
+  bucket: bucket,
+});
 
-    bucketPolicy.document.addStatements(
-      bucketContentStatement,
-      bucketStatement
-    );
+bucketPolicy.document.addStatements(
+  bucketContentStatement, bucketStatement);
 ```
-
-
 
 ## Sync to AWS S3 Bucket
 
@@ -175,7 +171,7 @@ Synchronize the content of your local YUM repository to the S3 bucket
 
 ```bash
 $ aws s3 sync --profile cdk s3_yum_repository \
-     s3://correttoyumrepositorysta-correttos3bucketbbeb0a25-1p908wuzpckvj  
+    s3://correttoyumrepositorysta-correttos3bucketbbeb0a25-1p908wuzpckvj  
 ```
 
 
@@ -224,15 +220,12 @@ Installiert:
 Fertig.
 ```
 
-
-## Bewarre
+## Beware
 
 * S3 treats "+" characters in the path as though they were space characters
 * Renaming of rpms maybe required before
   * running `createrepo`
   * syncing to S3
-
-
 
 ## Links
 
