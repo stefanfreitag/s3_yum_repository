@@ -220,7 +220,7 @@ Installiert:
 Fertig.
 ```
 
-## Beware
+## Beware!
 
 * S3 treats "+" characters in the path as though they were space characters
 * Renaming of rpms maybe required before
