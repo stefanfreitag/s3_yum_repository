@@ -163,7 +163,7 @@ aws s3 sync --profile cdk s3_yum_repository s3://correttoyumrepositorysta-corret
 
 For the test a CentOS 8 virtual machine can be setup by
 
-* Use the ISO image `CentOS-8.1.1911-x86_64-boot.iso` as starting point
+* Using the ISO image `CentOS-8.1.1911-x86_64-boot.iso` as starting point
 * Choose _minimal setup_ to define the set of packages to install
 
 Alternatively a Docker container can be used - this approach is the preferred  one.
@@ -185,21 +185,22 @@ my AWS config and credentials
 docker run --name centos_8 -it -v /home/stefan/.aws:/root/.aws --rm centos:8
 ```
 
-## Install required software
+### Install required software
 
 ```shell
-yum install python3-pip  vim
+yum -y install python3-pip vim
 pip3 install awscli
 ```
 
-## Create repository file
+### Create repository configuration file
 
 ```shell
 cd /etc/yum.repos.d/
 touch s3.repo
 ```
 
-Content of the repository file
+The content of the file `s3.repo` is as below - only the `baseUrl` needs to be updated based
+on the ARN of the S3 bucket.
 
 ```plaintext
 [s3_repo-x86_64]
@@ -209,7 +210,7 @@ gpgcheck = 0
 enabled = 1
 ```
 
-Install the JDK
+Installing the Corretto JDK is then possible by running yum
 
 ```shell
 $ yum install java-11-amazon-corretto-devel.x86_64
@@ -226,12 +227,13 @@ Installiert:
 Fertig.
 ```
 
-## Beware
+## ToDo
 
-* S3 treats "+" characters in the path as though they were space characters
-* Renaming of rpms maybe required before
-  * running `createrepo`
-  * syncing to S3
+S3 treats "+" characters in the path as though they were space characters.
+Hence renaming of the rpms files is required before
+
+* running `createrepo`
+* syncing the local content to S3
 
 ## Links
 
