@@ -25,7 +25,7 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
      */
     const bucket: Bucket = new Bucket(this, "CorrettoS3Bucket", {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
-      encryption: BucketEncryption.UNENCRYPTED,
+      encryption: BucketEncryption.S3_MANAGED,
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
       versioned: false
