@@ -115,12 +115,14 @@ const bucketContentStatement = new PolicyStatement({
   effect: Effect.ALLOW,
   actions: ["s3:GetObject"],
   resources: [bucket.bucketArn + "/*"],
-  principals: [new AnyPrincipal()]
+  principals: [new AnyPrincipal()],
+  conditions: {
+    IpAddress: {
+      "aws:SourceIp": ["87.122.210.145/32"],
+    },
+  },
 });
 
-bucketContentStatement.addCondition("IpAddress", {
-  "aws:SourceIp": "123.456.789.012/32"
-});
 ```
 
 The second defines who is allowed to `list` the contents of the bucket
@@ -128,13 +130,14 @@ The second defines who is allowed to `list` the contents of the bucket
 ```javascript
 const bucketStatement: PolicyStatement = new PolicyStatement({
   effect: Effect.ALLOW,
-  actions: ["s3:ListBucket"],
+  actions: ["s3:ListBucket", "s3:GetBucketLocation"],
   resources: [bucket.bucketArn],
-  principals: [new AnyPrincipal()]
-});
-
-bucketStatement.addCondition("IpAddress", {
-  "aws:SourceIp": "123.456.789.012/32"
+  principals: [new AnyPrincipal()],
+  conditions: {
+    IpAddress: {
+      "aws:SourceIp": ["87.122.210.145/32"],
+    },
+  },
 });
 ```
 

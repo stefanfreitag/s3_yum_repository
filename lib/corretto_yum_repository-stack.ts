@@ -7,13 +7,13 @@ import {
   ServicePrincipal,
   AnyPrincipal,
   Effect,
-  ArnPrincipal
+  ArnPrincipal,
 } from "@aws-cdk/aws-iam";
 import {
   Bucket,
   BlockPublicAccess,
   BucketEncryption,
-  BucketPolicy
+  BucketPolicy,
 } from "@aws-cdk/aws-s3";
 import { CfnOutput, RemovalPolicy, CfnCondition } from "@aws-cdk/core";
 export class CorrettoYumRepositoryStack extends cdk.Stack {
@@ -28,33 +28,37 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
       encryption: BucketEncryption.S3_MANAGED,
       publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
-      versioned: false
+      versioned: false,
     });
 
     const bucketContentStatement = new PolicyStatement({
       effect: Effect.ALLOW,
       actions: ["s3:GetObject"],
       resources: [bucket.bucketArn + "/*"],
-      principals: [new AnyPrincipal()]
-    });
-    bucketContentStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "87.122.210.145/32"
+      principals: [new AnyPrincipal()],
+      conditions: {
+        IpAddress: {
+          "aws:SourceIp": ["87.122.210.145/32"],
+        },
+      },
     });
 
     const bucketStatement: PolicyStatement = new PolicyStatement({
       effect: Effect.ALLOW,
-      actions: ["s3:ListBucket" , "s3:GetBucketLocation" ],
+      actions: ["s3:ListBucket", "s3:GetBucketLocation"],
       resources: [bucket.bucketArn],
-      principals: [new AnyPrincipal()]
-    });
-    bucketStatement.addCondition("IpAddress", {
-      "aws:SourceIp": "87.122.210.145/32"
+      principals: [new AnyPrincipal()],
+      conditions: {
+        IpAddress: {
+          "aws:SourceIp": ["87.122.210.145/32"],
+        },
+      },
     });
 
     const bucketPolicy = new BucketPolicy(this, "bucketPolicy", {
-      bucket: bucket, 
+      bucket: bucket,
     });
-    
+
     bucketPolicy.document.addStatements(
       bucketContentStatement,
       bucketStatement
