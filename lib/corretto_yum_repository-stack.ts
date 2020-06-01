@@ -16,19 +16,27 @@ import {
   BucketPolicy,
 } from "@aws-cdk/aws-s3";
 import { CfnOutput, RemovalPolicy, CfnCondition } from "@aws-cdk/core";
-export class CorrettoYumRepositoryStack extends cdk.Stack {
-  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+
+export interface YumRepositoryStackProperties {
+  readonly whitelist: Array<string>;
+}
+
+export class YumRepositoryStack extends cdk.Stack {
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    properties: YumRepositoryStackProperties,
+    props?: cdk.StackProps
+  ) {
     super(scope, id, props);
 
     /**
      * S3 bucket used to "host" the repository
      */
-    const bucket: Bucket = new Bucket(this, "CorrettoS3Bucket", {
+    const bucket: Bucket = new Bucket(this, "S3Bucket", {
       blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       encryption: BucketEncryption.S3_MANAGED,
-      publicReadAccess: false,
       removalPolicy: RemovalPolicy.DESTROY,
-      versioned: false,
     });
 
     const bucketContentStatement = new PolicyStatement({
@@ -38,7 +46,7 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
       principals: [new AnyPrincipal()],
       conditions: {
         IpAddress: {
-          "aws:SourceIp": ["87.122.210.145/32"],
+          "aws:SourceIp": properties.whitelist,
         },
       },
     });
@@ -50,7 +58,7 @@ export class CorrettoYumRepositoryStack extends cdk.Stack {
       principals: [new AnyPrincipal()],
       conditions: {
         IpAddress: {
-          "aws:SourceIp": ["87.122.210.145/32"],
+          "aws:SourceIp": properties.whitelist,
         },
       },
     });
