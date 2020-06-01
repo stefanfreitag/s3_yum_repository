@@ -11,8 +11,7 @@ pull_request_rules:
         delete_head_branch: {}
         dismiss_reviews: {}
       conditions:
-      - author!=dependabot[bot]
-      - author!=dependabot-preview[bot]
+      - author!=renovate[bot]
       - status-success=Semantic Pull Request
       - status-success=Codacy/PR Quality Review
       - status-success=markdownlint
