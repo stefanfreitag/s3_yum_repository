@@ -63,14 +63,33 @@ test("S3 bucket policy is setup", () => {
           {
             Action: "s3:GetObject",
             Effect: "Allow",
-            Principal: "*"
+            Principal: "*",
           },
           {
             Action: ["s3:ListBucket", "s3:GetBucketLocation"],
             Effect: "Allow",
-            Principal: "*"
+            Principal: "*",
           },
         ],
+      },
+    })
+  );
+});
+
+test("IAM role is setup", () => {
+  const app = new cdk.App();
+
+  const stack = new YumRepository.YumRepositoryStack(app, "MyTestStack", {
+    whitelist: ["87.123.60.75/32"],
+  });
+
+  expectCDK(stack).to(
+    haveResourceLike("AWS::IAM::Role", {
+      AssumeRolePolicyDocument: {
+        Statement: [{
+          Action: "sts:AssumeRole",
+          Effect: "Allow"
+        }],
       },
     })
   );

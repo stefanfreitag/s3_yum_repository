@@ -8,6 +8,7 @@ import {
   AnyPrincipal,
   Effect,
   ArnPrincipal,
+  CfnInstanceProfile,
 } from "@aws-cdk/aws-iam";
 import {
   Bucket,
@@ -72,6 +73,33 @@ export class YumRepositoryStack extends cdk.Stack {
       bucketStatement
     );
 
+    const ec2ContentStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:GetObject"],
+      resources: [bucket.bucketArn + "/*"],
+    });
+
+    const ec2Statement: PolicyStatement = new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: ["s3:ListBucket", "s3:GetBucketLocation"],
+      resources: [bucket.bucketArn],
+    });
+
+    const role = new Role(this, "role", {
+      assumedBy: new ServicePrincipal("ec2.amazonaws.com"),
+      managedPolicies: [
+        ManagedPolicy.fromAwsManagedPolicyName("AmazonS3FullAccess"),
+      ],
+    });
+    const instance_profile = new CfnInstanceProfile(this, "instanceProfile", {
+      roles: [role.roleName],
+    });
+
+    bucket.grantReadWrite(role);
+
     new cdk.CfnOutput(this, "Bucket name", { value: bucket.bucketName });
+    new cdk.CfnOutput(this, "Instance Profile ARN", {
+      value: instance_profile.attrArn,
+    });
   }
 }
