@@ -15,4 +15,5 @@ pull_request_rules:
       - status-success=Semantic Pull Request
       - status-success=Codacy/PR Quality Review
       - status-success=markdownlint
+      - "status-success=ci/circleci: build-and-test"
       - -closed
