@@ -10,7 +10,7 @@
       "schedule": ["after 9pm on sunday"]
     },
     {
-      "packageNames": ["@types/node", "@types/jest"],
+      "packageNames": ["@types/node", "@types/jest", "ts-test"],
       "enabled": false
     }
   ]
