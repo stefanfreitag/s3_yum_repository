@@ -1,6 +1,6 @@
 {
   "name": "@stefanfreitag/aws-s3-yum-repository",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "bin": {
     "yum_repository": "bin/yum_repository.js"
   },
