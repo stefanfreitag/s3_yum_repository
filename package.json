@@ -1,22 +1,39 @@
 {
-  "name": "corretto_yum_repository",
+  "name": "@stefanfreitag/aws-s3-yum-repository",
   "version": "0.1.0",
   "bin": {
-    "corretto_yum_repository": "bin/corretto_yum_repository.js"
+    "yum_repository": "bin/yum_repository.js"
   },
+  "author": {
+    "name": "Stefan Freitag",
+    "email": "stefan@stefreitag.de"
+  },
+  "repository": {
+    "url": "git://github.com/stefanfreitag/s3_yum_repository.git",
+    "type": "git"
+  },
+  "keywords": [
+    "aws",
+    "cdk",
+    "budget"
+  ],
+  "license": "Apache-2.0",
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "release-dry": "release-it --dry-run",
+    "release": "release-it"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.54.0",
     "@types/jest": "26.0.3",
     "@types/node": "14.0.14",
-    "jest": "26.1.0",
-    "ts-jest": "26.1.1",
     "aws-cdk": "1.54.0",
+    "jest": "26.1.0",
+    "release-it": "^13.6.6",
+    "ts-jest": "26.1.1",
     "ts-node": "8.10.2",
     "typescript": "3.9.6"
   },

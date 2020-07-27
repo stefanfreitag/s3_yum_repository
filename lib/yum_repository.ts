@@ -18,18 +18,17 @@ import {
 } from "@aws-cdk/aws-s3";
 import { CfnOutput, RemovalPolicy, CfnCondition } from "@aws-cdk/core";
 
-export interface YumRepositoryStackProperties {
+export interface YumRepositoryProperties {
   readonly whitelist: Array<string>;
 }
 
-export class YumRepositoryStack extends cdk.Stack {
+export class YumRepository extends cdk.Construct {
   constructor(
     scope: cdk.Construct,
     id: string,
-    properties: YumRepositoryStackProperties,
-    props?: cdk.StackProps
+    properties: YumRepositoryProperties
   ) {
-    super(scope, id, props);
+    super(scope, id);
 
     /**
      * S3 bucket used to "host" the repository
