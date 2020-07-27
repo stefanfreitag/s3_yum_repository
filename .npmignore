@@ -1,6 +1,15 @@
 *.ts
 !*.d.ts
 
+assets/*
+.huskyrc
+.whitesource
+.release-it-json
+.renovate.json
+.mergify.yml
+.circleci
+.github
+
 # CDK asset staging directory
 .cdk.staging
 cdk.out
