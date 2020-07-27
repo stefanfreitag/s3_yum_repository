@@ -6,12 +6,13 @@ import {
   haveResourceLike,
 } from "@aws-cdk/assert";
 import * as cdk from "@aws-cdk/core";
-import YumRepository = require("../lib/corretto_yum_repository-stack");
+import { Stack } from "@aws-cdk/core";
+import { YumRepository } from "../lib/yum_repository";
 
 test("S3 buckets are not public accessible ", () => {
-  const app = new cdk.App();
+  const stack = new Stack();
 
-  const stack = new YumRepository.YumRepositoryStack(app, "MyTestStack", {
+  new YumRepository(stack, "yum_repo", {
     whitelist: ["87.123.60.75/32"],
   });
 
@@ -28,9 +29,9 @@ test("S3 buckets are not public accessible ", () => {
 });
 
 test("S3 buckets are encrypted ", () => {
-  const app = new cdk.App();
+  const stack = new Stack();
 
-  const stack = new YumRepository.YumRepositoryStack(app, "MyTestStack", {
+  new YumRepository(stack, "yum_repo", {
     whitelist: ["87.123.60.75/32"],
   });
 
@@ -50,9 +51,8 @@ test("S3 buckets are encrypted ", () => {
 });
 
 test("S3 bucket policy is setup", () => {
-  const app = new cdk.App();
-
-  const stack = new YumRepository.YumRepositoryStack(app, "MyTestStack", {
+  const stack = new Stack();
+  new YumRepository(stack, "yum_repo", {
     whitelist: ["87.123.60.75/32"],
   });
 
@@ -77,19 +77,20 @@ test("S3 bucket policy is setup", () => {
 });
 
 test("IAM role is setup", () => {
-  const app = new cdk.App();
-
-  const stack = new YumRepository.YumRepositoryStack(app, "MyTestStack", {
+  const stack = new Stack();
+  new YumRepository(stack, "yum_repo", {
     whitelist: ["87.123.60.75/32"],
   });
 
   expectCDK(stack).to(
     haveResourceLike("AWS::IAM::Role", {
       AssumeRolePolicyDocument: {
-        Statement: [{
-          Action: "sts:AssumeRole",
-          Effect: "Allow"
-        }],
+        Statement: [
+          {
+            Action: "sts:AssumeRole",
+            Effect: "Allow",
+          },
+        ],
       },
     })
   );
