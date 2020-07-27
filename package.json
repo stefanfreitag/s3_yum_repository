@@ -46,5 +46,9 @@
     "@aws-cdk/aws-s3": "1.54.0",
     "@aws-cdk/core": "1.54.0",
     "source-map-support": "0.5.19"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/",
+    "access": "public"
   }
 }
