@@ -15,7 +15,7 @@
   "keywords": [
     "aws",
     "cdk",
-    "budget"
+    "s3"
   ],
   "license": "Apache-2.0",
   "scripts": {
