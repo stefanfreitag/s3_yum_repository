@@ -27,12 +27,12 @@
     "release": "release-it"
   },
   "devDependencies": {
-    "@aws-cdk/assert": "1.59.0",
+    "@aws-cdk/assert": "1.60.0",
     "@commitlint/cli": "9.1.2",
     "@commitlint/config-conventional": "9.1.2",
     "@types/jest": "26.0.8",
     "@types/node": "14.0.14",
-    "aws-cdk": "1.59.0",
+    "aws-cdk": "1.60.0",
     "husky": "4.2.5",
     "jest": "26.2.2",
     "release-it": "13.6.9",
@@ -41,10 +41,10 @@
     "typescript": "3.9.6"
   },
   "dependencies": {
-    "@aws-cdk/aws-ec2": "1.59.0",
-    "@aws-cdk/aws-iam": "1.59.0",
-    "@aws-cdk/aws-s3": "1.59.0",
-    "@aws-cdk/core": "1.59.0",
+    "@aws-cdk/aws-ec2": "1.60.0",
+    "@aws-cdk/aws-iam": "1.60.0",
+    "@aws-cdk/aws-s3": "1.60.0",
+    "@aws-cdk/core": "1.60.0",
     "source-map-support": "0.5.19"
   },
   "publishConfig": {
