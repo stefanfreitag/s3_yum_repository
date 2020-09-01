@@ -35,7 +35,7 @@
     "aws-cdk": "1.61.1",
     "husky": "4.2.5",
     "jest": "26.2.2",
-    "release-it": "13.6.9",
+    "release-it": "13.7.0",
     "ts-jest": "26.1.4",
     "ts-node": "9.0.0",
     "typescript": "3.9.6"
