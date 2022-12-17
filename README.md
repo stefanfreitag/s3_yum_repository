@@ -250,6 +250,3 @@ Hence renaming of the rpms files is required before
 * [Using Amazon S3 as a Hosted Yum Repository](https://www.rightbrainnetworks.com/2015/01/09/using-amazon-s3-as-a-hosted-yum-repository/)
 * [Yet Another Yum S3 Plugin](https://github.com/henrysher/cob)
 * [S3 Escaping](https://stackoverflow.com/questions/38282932/amazon-s3-url-being-encoded-to-2)
-
-[mergify]: https://mergify.io
-[mergify-status]: https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/stefanfreitag/s3_yum_repository&style=for-the-badge

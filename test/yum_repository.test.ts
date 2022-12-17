@@ -1,97 +1,110 @@
-import {
-  expect as expectCDK,
-  matchTemplate,
-  MatchStyle,
-  haveResource,
-  haveResourceLike,
-} from "@aws-cdk/assert";
-import * as cdk from "@aws-cdk/core";
-import { Stack } from "@aws-cdk/core";
-import { YumRepository } from "../lib/yum_repository";
+import { Stack } from 'aws-cdk-lib';
+import { Template } from 'aws-cdk-lib/assertions';
+import { YumRepository } from '../src/index';
 
-test("S3 buckets are not public accessible ", () => {
+test('S3 buckets are not public accessible ', () => {
   const stack = new Stack();
 
-  new YumRepository(stack, "yum_repo", {
-    whitelist: ["87.123.60.75/32"],
+  new YumRepository(stack, 'yum_repo', {
+    whitelist: ['87.123.60.75/32'],
   });
 
-  expectCDK(stack).to(
-    haveResource("AWS::S3::Bucket", {
-      PublicAccessBlockConfiguration: {
-        BlockPublicAcls: true,
-        BlockPublicPolicy: true,
-        IgnorePublicAcls: true,
-        RestrictPublicBuckets: true,
-      },
-    })
-  );
+  const template = Template.fromStack(stack);
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    PublicAccessBlockConfiguration: {
+      BlockPublicAcls: true,
+      BlockPublicPolicy: true,
+      IgnorePublicAcls: true,
+      RestrictPublicBuckets: true,
+    },
+  });
 });
 
-test("S3 buckets are encrypted ", () => {
+
+test('S3 buckets are encrypted ', () => {
   const stack = new Stack();
 
-  new YumRepository(stack, "yum_repo", {
-    whitelist: ["87.123.60.75/32"],
+  new YumRepository(stack, 'yum_repo', {
+    whitelist: ['87.123.60.75/32'],
   });
+  const template = Template.fromStack(stack);
 
-  expectCDK(stack).to(
-    haveResource("AWS::S3::Bucket", {
-      BucketEncryption: {
-        ServerSideEncryptionConfiguration: [
-          {
-            ServerSideEncryptionByDefault: {
-              SSEAlgorithm: "AES256",
+  template.hasResourceProperties('AWS::S3::Bucket', {
+    BucketEncryption: {
+      ServerSideEncryptionConfiguration: [
+        {
+          ServerSideEncryptionByDefault: {
+            SSEAlgorithm: 'AES256',
+          },
+        },
+      ],
+    },
+  });
+});
+
+
+test('S3 bucket policy is setup', () => {
+  const stack = new Stack();
+  new YumRepository(stack, 'yum_repo', {
+    whitelist: ['87.123.60.75/32'],
+  });
+  const template = Template.fromStack(stack);
+
+
+  template.hasResourceProperties('AWS::S3::BucketPolicy', {
+    PolicyDocument: {
+      Statement: [
+        {
+          Action: 's3:GetObject',
+          Effect: 'Allow',
+          Principal: {
+            AWS: '*',
+          },
+          Condition: {
+            IpAddress: {
+              'aws:SourceIp': [
+                '87.123.60.75/32',
+              ],
             },
           },
-        ],
-      },
-    })
-  );
+        },
+        {
+          Action: ['s3:ListBucket', 's3:GetBucketLocation'],
+          Effect: 'Allow',
+          Principal: {
+            AWS: '*',
+          },
+          Condition: {
+            IpAddress: {
+              'aws:SourceIp': [
+                '87.123.60.75/32',
+              ],
+            },
+          },
+        },
+      ],
+    },
+  });
 });
 
-test("S3 bucket policy is setup", () => {
+
+test('IAM role is setup', () => {
   const stack = new Stack();
-  new YumRepository(stack, "yum_repo", {
-    whitelist: ["87.123.60.75/32"],
+  new YumRepository(stack, 'yum_repo', {
+    whitelist: ['87.123.60.75/32'],
+  });
+  const template = Template.fromStack(stack);
+
+
+  template.hasResourceProperties('AWS::IAM::Role', {
+    AssumeRolePolicyDocument: {
+      Statement: [
+        {
+          Action: 'sts:AssumeRole',
+          Effect: 'Allow',
+        },
+      ],
+    },
   });
 
-  expectCDK(stack).to(
-    haveResourceLike("AWS::S3::BucketPolicy", {
-      PolicyDocument: {
-        Statement: [
-          {
-            Action: "s3:GetObject",
-            Effect: "Allow",
-            Principal: "*",
-          },
-          {
-            Action: ["s3:ListBucket", "s3:GetBucketLocation"],
-            Effect: "Allow",
-            Principal: "*",
-          },
-        ],
-      },
-    })
-  );
-});
-
-test("IAM role is setup", () => {
-  const stack = new Stack();
-  new YumRepository(stack, "yum_repo", {
-    whitelist: ["87.123.60.75/32"],
-  });
-
-  expectCDK(stack).to(
-    haveResourceLike("AWS::IAM::Role", {
-      AssumeRolePolicyDocument: {
-        Statement: [
-          {
-            Action: "sts:AssumeRole",
-            Effect: "Allow",
-          },
-        ],
-      },
-    })
-  );
 });
