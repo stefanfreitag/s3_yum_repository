@@ -1,6 +1,6 @@
 import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
-import { YumRepository } from '../lib/yum_repository';
+import { YumRepository } from '../src/index';
 
 test('S3 buckets are not public accessible ', () => {
   const stack = new Stack();
