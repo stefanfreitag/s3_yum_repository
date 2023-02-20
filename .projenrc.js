@@ -4,7 +4,7 @@ const { UpgradeDependenciesSchedule } = require('projen/lib/javascript');
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Stefan Freitag',
   authorAddress: 'stefan.freitag@udo.edu',
-  cdkVersion: '2.55.1',
+  cdkVersion: '2.65.0',
   stability: Stability.EXPERIMENTAL,
   defaultReleaseBranch: 'main',
   name: 's3_yum_repository_projen',
