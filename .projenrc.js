@@ -4,7 +4,7 @@ const { UpgradeDependenciesSchedule } = require('projen/lib/javascript');
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'Stefan Freitag',
   authorAddress: 'stefan.freitag@udo.edu',
-  cdkVersion: '2.67.0',
+  cdkVersion: '2.126.0',
   stability: Stability.EXPERIMENTAL,
   defaultReleaseBranch: 'master',
   name: 's3_yum_repository_projen',
@@ -19,7 +19,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'cdk',
     's3',
   ],
-
+  jsiiVersion: '5.x',
+  jest: {
+    jestVersion: '^29',
+  },
+  typescriptVersion: '5.3.3',
 });
 project.gitignore.addPatterns('.history/');
 project.npmignore.addPatterns('.history/');
