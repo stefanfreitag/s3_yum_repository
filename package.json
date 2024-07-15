@@ -50,7 +50,7 @@
     "jsii-docgen": "^7.2.9",
     "jsii-pacmak": "^1.101.0",
     "jsii-rosetta": "5.x",
-    "projen": "^0.84.0",
+    "projen": "^0.84.4",
     "standard-version": "^9",
     "ts-jest": "^27",
     "typescript": "5.3.3"
@@ -73,8 +73,8 @@
   "jest": {
     "coverageProvider": "v8",
     "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/@(test|src)/**/*(*.)@(spec|test).ts?(x)"
+      "<rootDir>/@(src|test)/**/?(*.)+(spec|test).ts?(x)",
+      "<rootDir>/@(src|test)/**/__tests__/**/*.ts?(x)"
     ],
     "clearMocks": true,
     "collectCoverage": true,
