@@ -4,6 +4,8 @@
 
 ### YumRepository <a name="YumRepository" id="s3_yum_repository_projen.YumRepository"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="s3_yum_repository_projen.YumRepository.Initializer"></a>
 
 ```typescript
